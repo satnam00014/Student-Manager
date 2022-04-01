@@ -20,6 +20,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 
 public class ClassesRecyclerAdapter extends RecyclerView.Adapter<ClassesRecyclerAdapter.ViewHolder> implements Filterable {
+
+
     private final Context context;
     public ClassesRecyclerAdapter(Context context) {
         this.context = context;

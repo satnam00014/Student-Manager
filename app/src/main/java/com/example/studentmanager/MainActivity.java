@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         findViewById(R.id.Login).setOnClickListener(v -> {
             startActivity(new Intent(this,ClassList.class));
+            this.finish();
         });
     }
 
