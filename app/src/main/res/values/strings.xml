@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Student Manager</string>
+    <string name="login_button">Login with Google</string>
 </resources>
