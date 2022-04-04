@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Student Manager</string>
     <string name="login_button">Login with Google</string>
+    <string name="web_client_id_auth">"757416738297-79amj5jdl8dsg4r3ab97uechcddok2h1.apps.googleusercontent.com"</string>
 </resources>
