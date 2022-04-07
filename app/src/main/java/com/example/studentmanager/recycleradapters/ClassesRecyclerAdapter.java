@@ -16,15 +16,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.studentmanager.R;
+import com.example.studentmanager.datamodel.ClassOfSchool;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
 
 
 public class ClassesRecyclerAdapter extends RecyclerView.Adapter<ClassesRecyclerAdapter.ViewHolder> implements Filterable {
 
 
     private final Context context;
+    private String ImageURL = "https://picsum.photos/200/300";
+    private ArrayList<ClassOfSchool> arrayList;
     public ClassesRecyclerAdapter(Context context) {
         this.context = context;
+        arrayList = new ArrayList<>();
     }
 
     @Override
@@ -61,16 +67,16 @@ public class ClassesRecyclerAdapter extends RecyclerView.Adapter<ClassesRecycler
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         //following is to set class name
-        holder.className.setText("Classname");
+        holder.className.setText(arrayList.get(position).getName());
 
         //following is to set number of students in class.
-        holder.numberOfStudents.setText("8 students");
+        holder.numberOfStudents.setText("Total Students: "+arrayList.get(position).getStudents().length);
 
         //following is to set images
-        Glide.with(context).load(R.drawable.button_background)
+        Glide.with(context).load(ImageURL)
                 .apply(RequestOptions.circleCropTransform()).thumbnail(0.3f).into(holder.classImageView);
         //below is condition that enable delete class button if condition is true
-        if (true){
+        if (arrayList.get(position).getStudents().length == 0){
             holder.deleteButton.setVisibility(View.VISIBLE);
         }
         holder.deleteButton.setOnClickListener(v -> {
@@ -83,9 +89,19 @@ public class ClassesRecyclerAdapter extends RecyclerView.Adapter<ClassesRecycler
 
     @Override
     public int getItemCount() {
-        return 20;
+        return arrayList.size();
     }
 
+
+    public void updateData(ArrayList<ClassOfSchool> arrayList){
+        this.arrayList = arrayList;
+        notifyDataSetChanged();
+    }
+
+    public void updateImage(String imageURL){
+        this.ImageURL = imageURL;
+        notifyDataSetChanged();
+    }
 
 
     // this is the view holder which holds the view

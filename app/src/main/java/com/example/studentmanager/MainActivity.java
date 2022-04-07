@@ -19,26 +19,31 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
     private BeginSignInRequest signInRequest;
     private SignInClient oneTapClient;
     private FirebaseAuth mAuth;
-
-
     private static final int REQ_ONE_TAP = 27;  // Can be any integer unique to the Activity.
+    private final String TAG = "TAG:";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.d("Login: ", "inside create");
+        Log.d(TAG, "inside create");
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
+
         findViewById(R.id.Login).setOnClickListener(v -> {
 //            startActivity(new Intent(this,ClassList.class));
 //            this.finish();
-
+            Log.d(TAG, "inside button click");
             Toast.makeText(getApplicationContext(),"Click",Toast.LENGTH_LONG).show();
             userSignin();
 
@@ -56,20 +61,20 @@ public class MainActivity extends AppCompatActivity {
                 if (idToken != null) {
                     // Got an ID token from Google. Use it to authenticate
                     // with Firebase.
-                    Log.d("Login: - ", "Got ID token. " + idToken);
+                    Log.d(TAG, "Got ID token. " + idToken);
                     AuthCredential firebaseCredential = GoogleAuthProvider.getCredential(idToken, null);
                     mAuth.signInWithCredential(firebaseCredential)
                             .addOnCompleteListener(this, task -> {
                                 if (task.isSuccessful()) {
                                     // Sign in success, update UI with the signed-in user's information
-                                    Log.d("Login: - ", "signInWithCredential:success");
+                                    Log.d(TAG, "signInWithCredential:success");
                                     FirebaseUser user = mAuth.getCurrentUser();
-                                    Log.d("Login: - ", user.getEmail() + user.getDisplayName() + user.getUid());
+                                    Log.d(TAG, user.getEmail() + user.getDisplayName() + user.getUid());
+                                    checkUserData(user.getUid());
                                     Toast.makeText(getApplicationContext(),user.getEmail() + user.getDisplayName() + user.getUid(),Toast.LENGTH_LONG).show();
-
                                 } else {
                                     // If sign in fails, display a message to the user.
-                                    Log.w("Login: - ", "signInWithCredential:failure", task.getException());
+                                    Log.d(TAG, "signInWithCredential:failure", task.getException());
                                 }
                             });
                 }
@@ -92,12 +97,35 @@ public class MainActivity extends AppCompatActivity {
                 .build();
     }
 
-    private void userSignin(){
-        if(FirebaseAuth.getInstance().getCurrentUser() != null){
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            Log.d("Login: - ", user.getEmail() + user.getDisplayName() + user.getUid());
-            Toast.makeText(getApplicationContext(),user.getEmail() + user.getDisplayName() + user.getUid(),Toast.LENGTH_LONG).show();
+    //this is called in two places if user already signup and data doesn't exit or new user is created and data doesn't exit
+    private void checkUserData(String userId){
+        FirebaseFirestore.getInstance().document("Schools/"+userId).get().addOnSuccessListener(documentSnapshot -> {
+            if (!documentSnapshot.exists()){
+                String imageUrl = "https://firebasestorage.googleapis.com/v0/b/student-manager-dee4c.appspot.com/o/school.jpg?alt=media&token=efb6519b-ad73-420c-9cb5-6ef74f8e5815";
+                Map<String,String> user = new HashMap<>();
+                user.put("name","Sample Name");
+                user.put("location","Sample location");
+                user.put("image",imageUrl);
+                FirebaseFirestore.getInstance().document("Schools/"+userId).set(user)
+                        .addOnSuccessListener(unused -> {
+                            Log.d(TAG, "User data created successfull");
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.d(TAG, "Failed to create userdata");
+                        });
+            }else{
+                startActivity(new Intent(this,ClassList.class));
+                this.finish();
+            }
+        });
+    }
 
+    private void userSignin(){
+        if(mAuth.getCurrentUser() != null){
+            FirebaseUser user = mAuth.getCurrentUser();
+            Log.d(TAG, user.getEmail() + user.getDisplayName() + user.getUid());
+            Toast.makeText(getApplicationContext(),user.getEmail() + user.getDisplayName() + user.getUid(),Toast.LENGTH_LONG).show();
+            checkUserData(user.getUid());
             return;
         }
         signInSetup();
