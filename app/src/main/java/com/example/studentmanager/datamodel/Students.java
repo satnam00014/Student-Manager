@@ -4,7 +4,7 @@ import com.google.firebase.firestore.Exclude;
 
 public class Students {
 
-    private String id, studentId, name, fatherName, motherName, address, image, dob;
+    private String documentId, studentId, name, fatherName, motherName, address, image, dob;
 
     public Students() {
     }
@@ -29,8 +29,12 @@ public class Students {
     }
 
     @Exclude
-    public String getId(){
-        return id;
+    public String getDocumentId(){
+        return documentId;
+    }
+
+    public void setDocumentId(String documentId){
+        this.documentId = documentId;
     }
 
     public String getStudentId() {

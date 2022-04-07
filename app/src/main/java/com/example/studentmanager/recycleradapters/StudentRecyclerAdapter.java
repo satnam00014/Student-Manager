@@ -27,10 +27,10 @@ public class StudentRecyclerAdapter  extends RecyclerView.Adapter<StudentRecycle
 
     private final Context context;
     private String ImageURL = "https://picsum.photos/200/300";
-    private ArrayList<Students> arrayList;
+    private ArrayList<Students> studentList;
     public StudentRecyclerAdapter(Context context) {
         this.context = context;
-        arrayList = new ArrayList<>();
+        studentList = new ArrayList<>();
     }
 
     @Override
@@ -67,12 +67,12 @@ public class StudentRecyclerAdapter  extends RecyclerView.Adapter<StudentRecycle
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         //following is to set class name
-        holder.studentName.setText("Student Name");
+        holder.studentName.setText(studentList.get(position).getName());
 
-        holder.studentId.setText("Student Id");
+        holder.studentId.setText(studentList.get(position).getStudentId());
 
         //following is to set images
-        Glide.with(context).load(ImageURL)
+        Glide.with(context).load(studentList.get(position).getImage())
                 .apply(RequestOptions.circleCropTransform()).thumbnail(0.3f).into(holder.studentImageView);
         //below is condition that enable delete class button if condition is true
 
@@ -86,12 +86,12 @@ public class StudentRecyclerAdapter  extends RecyclerView.Adapter<StudentRecycle
 
     @Override
     public int getItemCount() {
-        return 20;
+        return studentList.size();
     }
 
 
     public void updateData(ArrayList<Students> arrayList){
-        this.arrayList = arrayList;
+        this.studentList = arrayList;
         notifyDataSetChanged();
     }
 

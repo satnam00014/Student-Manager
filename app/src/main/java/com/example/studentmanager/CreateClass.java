@@ -24,6 +24,7 @@ import java.util.ArrayList;
 public class CreateClass extends AppCompatActivity {
 
     private String userId;
+    private boolean isCreateClickedDisabled = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +65,9 @@ public class CreateClass extends AppCompatActivity {
     }
 
     private void checkDataToUpdate(String className,String teacherName){
+        if (isCreateClickedDisabled)
+            return;
+        isCreateClickedDisabled = true;
         FirebaseFirestore.getInstance().collection("Schools/"+this.userId+"/Classes").get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()){
@@ -77,18 +81,21 @@ public class CreateClass extends AppCompatActivity {
                             FirebaseFirestore.getInstance().collection("Schools/"+this.userId+"/Classes")
                                     .add(cos)
                                     .addOnSuccessListener(documentReference -> {
+                                        isCreateClickedDisabled = false;
                                         Toast.makeText(getApplicationContext(),"Class Created",Toast.LENGTH_LONG).show();
                                         this.finish();
                                     })
                                     .addOnFailureListener(e -> {
+                                        isCreateClickedDisabled = false;
                                         Toast.makeText(getApplicationContext(),"Error while creating class",Toast.LENGTH_LONG).show();
                                         Toast.makeText(getApplicationContext(),e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
                                     });
                         }else{
+                            isCreateClickedDisabled = false;
                             Toast.makeText(getApplicationContext(),"Class already exit with same name",Toast.LENGTH_LONG).show();
                         }
                     }else{
-
+                        isCreateClickedDisabled = false;
                     }
                 });
     }
