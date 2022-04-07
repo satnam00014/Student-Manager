@@ -41,11 +41,11 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         findViewById(R.id.Login).setOnClickListener(v -> {
-//            startActivity(new Intent(this,ClassList.class));
-//            this.finish();
+            startActivity(new Intent(this,ClassList.class));
+            this.finish();
             Log.d(TAG, "inside button click");
             Toast.makeText(getApplicationContext(),"Click",Toast.LENGTH_LONG).show();
-            userSignin();
+//            userSignin();
 
         });
     }

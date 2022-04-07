@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -43,6 +44,9 @@ public class ClassList extends AppCompatActivity {
         Log.d("TAG:","ACTIVITY START");
         userId = "GAArz0vHmyRq3DG5gStDKIzIfKo2";//This line is added for testing only
         setRecyclerView();
+        findViewById(R.id.add_classroom_btn).setOnClickListener(view -> {
+            startActivity(new Intent(this,CreateClass.class));
+        });
     }
 
     private void setRecyclerView() {
@@ -107,15 +111,19 @@ public class ClassList extends AppCompatActivity {
                Log.d(TAG,error.getLocalizedMessage());
                return;//we have to return if any error occured
            }
-           ArrayList<ClassOfSchool> arrayList = new ArrayList<>();
-           for (DocumentSnapshot snapshot : value){
-               ClassOfSchool classOfSchool = snapshot.toObject(ClassOfSchool.class);
-               Log.d(TAG,classOfSchool.getName());
-               arrayList.add(classOfSchool);
-           }
+           if (value!=null){
+               ArrayList<ClassOfSchool> arrayList = new ArrayList<>();
+               for (DocumentSnapshot snapshot : value){
+                   ClassOfSchool classOfSchool = snapshot.toObject(ClassOfSchool.class);
+                   classOfSchool.setDocumentId(snapshot.getId());
+                   Log.d(TAG,classOfSchool.getDocumentId());
+                   Log.d(TAG,classOfSchool.getName());
+                   arrayList.add(classOfSchool);
+               }
 
-           if (classesRecyclerAdapter!=null)
-               classesRecyclerAdapter.updateData(arrayList);
+               if (classesRecyclerAdapter!=null)
+                   classesRecyclerAdapter.updateData(arrayList);
+           }
         });
 
         //Following is to get image of students

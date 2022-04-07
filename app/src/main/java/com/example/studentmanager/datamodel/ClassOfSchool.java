@@ -2,23 +2,29 @@ package com.example.studentmanager.datamodel;
 
 import com.google.firebase.firestore.Exclude;
 
+import java.util.ArrayList;
+
 public class ClassOfSchool {
 
     private String name;
-    private String Id;
-    private String[] students;
+    private String documentId;
+    private ArrayList<String> students = new ArrayList<>();
     private String teacher;
 
     public ClassOfSchool() {
         name = "";
-        Id = "";
-        students = new String[0];
+        documentId = "";
         teacher = "";
     }
 
-    public ClassOfSchool(String name, String id, String[] students, String teacher) {
+    public ClassOfSchool(String name, String teacher) {
         this.name = name;
-        Id = id;
+        this.teacher = teacher;
+    }
+
+    public ClassOfSchool(String name, String documentId, ArrayList<String> students, String teacher) {
+        this.name = name;
+        this.documentId = documentId;
         this.students = students;
         this.teacher = teacher;
     }
@@ -32,11 +38,15 @@ public class ClassOfSchool {
     }
 
     @Exclude
-    public String getId() {
-        return Id;
+    public String getDocumentId(){
+        return documentId;
     }
 
-    public String[] getStudents() {
+    public void setDocumentId(String documentId){
+        this.documentId = documentId;
+    }
+
+    public ArrayList<String> getStudents() {
         return students;
     }
 

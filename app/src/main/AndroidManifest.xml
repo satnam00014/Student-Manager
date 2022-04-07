@@ -10,6 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StudentManager">
         <activity
+            android:name=".StudentList"
+            android:exported="false" />
+        <activity
+            android:name=".CreateClass"
+            android:exported="false" />
+        <activity
             android:name=".ClassList"
             android:exported="false" />
         <activity
